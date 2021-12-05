@@ -36,14 +36,14 @@ The contents of `/var/lib/docker/`, including images, containers, volumes, and n
 1. To uninstall the Docker Engine, CLI, and Containerd packages:
 
 ```sh
- sudo apt-get purge docker-ce docker-ce-cli containerd.io
+sudo apt-get purge docker-ce docker-ce-cli containerd.io
  ```
  
 2. To delete all images, containers, and volumes:
 
 ```sh
- sudo rm -rf /var/lib/docker
- sudo rm -rf /var/lib/containerd
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
  ```
  
 ## Installation methods
@@ -74,13 +74,13 @@ sudo apt-get install \
 2. Add Docker’s official GPG key:
 
 ```sh
- curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
  ```
 
 3. Use the following command to set up the stable repository. To add the nightly or test repository, add the word **nightly** or **test** (or both) after the word **stable** in the commands below.
 
 ```sh
- echo \
+echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
@@ -90,8 +90,8 @@ sudo apt-get install \
 1. Update the **apt** package index, and install the latest version of Docker Engine and containerd, or go to the next step to install a specific version:
 
 ```sh
- sudo apt-get update
- sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
 ```
 
 > Got multiple Docker repositories?
@@ -108,13 +108,13 @@ apt-cache madison docker-ce
 b. Install a specific version using the version string from the second column, for example, **5:18.09.1~3-0~ubuntu-xenial**.
 
 ```sh
- sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
+sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
 ```
 
 3. Verify that Docker Engine is installed correctly by running the hello-world image.
 
 ```sh
-     sudo docker run hello-world
+sudo docker run hello-world
 ```
 
 This command downloads a test image and runs it in a container. When the container runs, it prints a message and exits.
@@ -177,8 +177,8 @@ DRY_RUN=1 sh ./get-docker.sh
 This example downloads the script from get.docker.com and runs it to install the latest stable release of Docker on Linux:
 
 ```sh
- curl -fsSL https://get.docker.com -o get-docker.sh
- sudo sh get-docker.sh
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 ```
 
 Docker is installed. The **docker** service starts automatically on Debian based distributions. On **RPM** based distributions, such as CentOS, Fedora, RHEL or SLES, you need to start it manually using the appropriate **systemctl** or **service** command. As the message indicates, non-root users cannot run Docker commands by default.
@@ -193,8 +193,8 @@ Docker also provides a convenience script at test.docker.com to install pre-rele
 To install the latest version of Docker on Linux from the “test” channel, run:
 
 ```sh
- curl -fsSL https://test.docker.com -o test-docker.sh
- sudo sh test-docker.sh
+curl -fsSL https://test.docker.com -o test-docker.sh
+sudo sh test-docker.sh
 ```
 
 #### Upgrade Docker after using the convenience script
@@ -218,10 +218,10 @@ mkdir quickstart_docker/docker/application
 
 You will get this structure:
 
-quickstart_docker/ # Main project directory
-├──application/      #  Aplication sources 
-└──docker/           # Docker files
-    └──docker/       # Put here Dockerfile for the application 
+quickstart_docker/ # Main project directory  
+├──application/      #  Aplication sources   
+└──docker/           # Docker files  
+    └──docker/       # Put here Dockerfile for the application   
 
 Everything will work correctly from one folder, but it is better to stick to the structure.
 
@@ -275,9 +275,9 @@ docker build . -f-docker/application/Dockerfile -t exampleapp
 ```
 
 > Arguments:
-. - working directory;
--f docker/application/Dockerfile - docker-file;
--t exampleapp - image tag to make it easier to find.
+. - working directory;  
+-f docker/application/Dockerfile - docker-file;  
+-t exampleapp - image tag to make it easier to find.  
 Read more about building images for Docker [here](https://docs.docker.com/engine/reference/builder/).
 
 ### Check the result
