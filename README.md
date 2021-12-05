@@ -155,5 +155,5 @@ To install the latest version of Docker on Linux from the “test” channel, ru
  curl -fsSL https://test.docker.com -o test-docker.sh
  sudo sh test-docker.sh
 ```
-####Upgrade Docker after using the convenience script
+#### Upgrade Docker after using the convenience script
 If you installed Docker using the convenience script, you should upgrade Docker using your package manager directly. There is no advantage to re-running the convenience script, and it can cause issues if it attempts to re-add repositories which have already been added to the host machine.
