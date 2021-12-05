@@ -119,7 +119,7 @@ To upgrade Docker Engine, download the newer package file and repeat the _Set up
 
 ### Install using the convenience script
 
-Docker provides a convenience script at get.docker.com to install Docker into development environments quickly and non-interactively. The convenience script is not recommended for production environments, but can be used as an example to create a provisioning script that is tailored to your needs. Also refer to the _Set up the repository part above_ steps to learn about installation steps to install using the package repository. The source code for the script is open source, and can be found in the **docker-install** (repository on GitHub)[https://github.com/docker/docker-install].
+Docker provides a convenience script at get.docker.com to install Docker into development environments quickly and non-interactively. The convenience script is not recommended for production environments, but can be used as an example to create a provisioning script that is tailored to your needs. Also refer to the _Set up the repository part above_ steps to learn about installation steps to install using the package repository. The source code for the script is open source, and can be found in the **docker-install** [repository on GitHub](https://github.com/docker/docker-install).
 
 Always examine scripts downloaded from the internet before running them locally. Before installing, make yourself familiar with potential risks and limitations of the convenience script:
 
@@ -157,3 +157,87 @@ To install the latest version of Docker on Linux from the “test” channel, ru
 ```
 #### Upgrade Docker after using the convenience script
 If you installed Docker using the convenience script, you should upgrade Docker using your package manager directly. There is no advantage to re-running the convenience script, and it can cause issues if it attempts to re-add repositories which have already been added to the host machine.
+
+## Launch a container with an application
+First you need to start a container with an application in the Kubernetes cluster. For example, take ExampleApp, on port 8800 for accepting requests. 
+
+### Create a structure
+To create structure you need to create a directory and subdirectories. Run the following commands: 
+```sh
+mkdir quickstart_docker
+mkdir quickstart_docker/application
+mkdir quickstart_docker/docker
+mkdir quickstart_docker/docker/application
+```
+
+You will get this structure:
+quickstart_docker/ # Main project directory
+├──application/      #  Aplication sources 
+└──docker/           # Docker files
+    └──docker/       # Put here Dockerfile for the application 
+Everything will work correctly from one folder, but it is better to stick to the structure.
+
+### Application deployment
+To deploy an application, you need an example. Then you need to replace this with a read one. 
+
+Make(Or edit if there is already one) the **application.py** file in the `quickstart_docker/application` with the following content:  
+```
+import http.server
+import socketserver
+
+PORT = 8000
+
+Handler = http.server.SimpleHTTPRequestHandler
+
+httpd = socketserver.TCPServer(("", PORT), Handler)
+
+print("serving at port", PORT)
+httpd.serve_forever()
+```
+
+### Connect dependencies 
+The application needs an environment. At least, you need python, and dependencies for it. All dependencies can be obtained from dockerhab, take then from there.
+Make(Or edit if there is already one) the **Dockerfile** file in the `quickstart_docker/docker/application` with the following content:  
+```
+# Use base image from the registry
+FROM python:3.5
+
+# Set the working directory to /app
+WORKDIR /app
+
+# Copy the 'application' directory contents into the container at /app
+COPY ./application /app
+
+# Make port 8000 available to the world outside this container
+EXPOSE 8000
+
+# Execute 'python /app/application.py' when container launches
+CMD ["python", "/app/application.py"]
+```
+
+### Make a build
+The next step is to create a build. Run the following command:
+```sh
+docker build . -f-docker/application/Dockerfile -t exampleapp
+```
+
+> Note: Arguments:
+. - working directory;
+-f docker/application/Dockerfile - docker-file;
+-t exampleapp - image tag to make it easier to find.
+Read more about building images for Docker [here](https://docs.docker.com/engine/reference/builder/).
+
+### Check the result
+To make sure the image was created run the following command:
+```sh
+docker images
+```
+
+You will get result like this one:
+
+| REPOSITORY | TAG    | IMAGE ID     | CREATED       | SIZE  |
+|------------|--------|--------------|---------------|-------|
+| exampleapp | latest | 83wse0edc28a | 2 seconds ago | 153MB |
+| python     | 3.6    | 05sob8636w3f | 6 weeks ago   | 153MB |
+
+Then, you need to push the image into the repository.
