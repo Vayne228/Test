@@ -105,7 +105,7 @@ a. List the versions available in your repo:
 apt-cache madison docker-ce
 ```
 
-b. Install a specific version using the version string from the second column, for example, **5:18.09.1~3-0~ubuntu-xenial**.
+b. Install a specific version using the version string from the second column, for example, **5:18.09.1\~3-0\~ubuntu-xenial**.
 
 ```sh
 sudo apt-get install docker-ce=<VERSION_STRING> docker-ce-cli=<VERSION_STRING> containerd.io
