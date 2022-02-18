@@ -155,52 +155,6 @@ Docker Engine is installed and running. The **docker** group is created but no u
 
 To upgrade Docker Engine, download the newer package file and repeat the [installation instructions](#set-up-the-repository), pointing to the new file.
 
-### Install using the convenience script
-
-Docker provides a convenience script at get.docker.com to install Docker into development environments quickly and non-interactively. The convenience script is not recommended for production environments, but can be used as an example to create a provisioning script that is tailored to your needs. Also refer to the _Set up the repository part above_ steps to learn about installation steps to install using the package repository. The source code for the script is open source, and can be found in the **docker-install** [repository on GitHub](https://github.com/docker/docker-install).
-
-Always examine scripts downloaded from the internet before running them locally. Before installing, make yourself familiar with potential risks and limitations of the convenience script:
-
-- The script requires root or sudo privileges to run.
-- The script attempts to detect your Linux distribution and version and configure your package management system for you, and does not allow you to customize most installation parameters.
-- The script installs dependencies and recommendations without asking for confirmation. This may install a large number of packages, depending on the current configuration of your host machine.
-- By default, the script installs the latest stable release of Docker, containerd, and runc. When using this script to provision a machine, this may result in unexpected major version upgrades of Docker. Always test (major) upgrades in a test environment before deploying to your production systems.
-- The script is not designed to upgrade an existing Docker installation. When using the script to update an existing installation, dependencies may not be updated to the expected version, causing outdated versions to be used.
-
-> Preview script steps before running
-You can run the script with the **DRY_RUN=1** option to learn what steps the script will execute during installation:
-```sh
-curl -fsSL https://get.docker.com -o get-docker.sh
-DRY_RUN=1 sh ./get-docker.sh
-```
-
-This example downloads the script from get.docker.com and runs it to install the latest stable release of Docker on Linux:
-
-```sh
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-```
-
-Docker is installed. The **docker** service starts automatically on Debian based distributions. On **RPM** based distributions, such as CentOS, Fedora, RHEL or SLES, you need to start it manually using the appropriate **systemctl** or **service** command. As the message indicates, non-root users cannot run Docker commands by default.
-
-> Use Docker as a non-privileged user, or install in rootless mode?
-The installation script requires root or sudo privileges to install and use Docker. If you want to grant non-root users access to Docker, refer to the post-installation steps for Linux. Docker can also be installed without root privileges, or configured to run in rootless mode. For instructions on running Docker in rootless mode, refer to run the Docker daemon as a non-root user (rootless mode).
-
-#### Install pre-releases
-
-Docker also provides a convenience script at test.docker.com to install pre-releases of Docker on Linux. This script is equivalent to the script at get.docker.com, but configures your package manager to enable the “test” channel from our package repository, which includes both stable and pre-releases (beta versions, release-candidates) of Docker. Use this script to get early access to new releases, and to evaluate them in a testing environment before they are released as stable.
-
-To install the latest version of Docker on Linux from the “test” channel, run:
-
-```sh
-curl -fsSL https://test.docker.com -o test-docker.sh
-sudo sh test-docker.sh
-```
-
-#### Upgrade Docker after using the convenience script
-
-If you installed Docker using the convenience script, you should upgrade Docker using your package manager directly. There is no advantage to re-running the convenience script, and it can cause issues if it attempts to re-add repositories which have already been added to the host machine.
-
 ## Launch a container with an application
 
 First you need to start a container with an application in the Kubernetes cluster. For example, take ExampleApp, on port 8800 for accepting requests. 
@@ -226,7 +180,7 @@ quickstart_docker/ # Main project directory
 Everything will work correctly from one folder, but it is better to stick to the structure.
 
 ### Application deployment
-To deploy an application, you need an example. Then you need to replace this with a read one. 
+To deploy an application, you need an example. Then you need to replace this with a real one. 
 
 Make(Or edit if there is already one) the **application.py** file in the `quickstart_docker/application` with the following content: 
 
@@ -234,7 +188,7 @@ Make(Or edit if there is already one) the **application.py** file in the `quicks
 import http.server
 import socketserver
 
-PORT = 8000
+PORT = 8800
 
 Handler = http.server.SimpleHTTPRequestHandler
 
@@ -246,8 +200,8 @@ httpd.serve_forever()
 
 ### Connect dependencies 
 
-The application needs an environment. At least, you need python, and dependencies for it. All dependencies can be obtained from dockerhab, take then from there.
-Make(Or edit if there is already one) the **Dockerfile** file in the `quickstart_docker/docker/application` with the following content:  
+The application needs an environment. At least, you need Python, and dependencies for it. All dependencies can be obtained from Docker Hub, take them from there.
+Make (or edit if there is already one) the **Dockerfile** file in the `quickstart_docker/docker/application` with the following content:  
 
 ```
 # Use base image from the registry
@@ -259,8 +213,8 @@ WORKDIR /app
 # Copy the 'application' directory contents into the container at /app
 COPY ./application /app
 
-# Make port 8000 available to the world outside this container
-EXPOSE 8000
+# Make port 8800 available to the world outside this container
+EXPOSE 8800
 
 # Execute 'python /app/application.py' when container launches
 CMD ["python", "/app/application.py"]
@@ -271,14 +225,14 @@ CMD ["python", "/app/application.py"]
 The next step is to create a build. Run the following command:
 
 ```sh
-docker build . -f-docker/application/Dockerfile -t exampleapp
+docker build . -f docker/application/Dockerfile -t exampleapp
 ```
 
 > Arguments:
 . - working directory;  
 -f docker/application/Dockerfile - docker-file;  
 -t exampleapp - image tag to make it easier to find.  
-Read more about building images for Docker [here](https://docs.docker.com/engine/reference/builder/).
+Read more about [building images for Docker](https://docs.docker.com/engine/reference/builder/).
 
 ### Check the result
 
@@ -290,9 +244,11 @@ docker images
 
 You will get result like this one:
 
+```
 | REPOSITORY | TAG    | IMAGE ID     | CREATED       | SIZE  |
 |------------|--------|--------------|---------------|-------|
 | exampleapp | latest | 83wse0edc28a | 2 seconds ago | 153MB |
 | python     | 3.6    | 05sob8636w3f | 6 weeks ago   | 153MB |
+```
 
-Then, you need to push the image into the repository.
+Then, you need to push the image into the repository. Read about this in the next [article](#).
